@@ -148,8 +148,24 @@ if __name__ == '__main__':
     app.on_shutdown.append(on_shutdown)
     app.on_startup.append(on_startup)
 
-    # Create an SSL context
-    ssl_context = ssl.create_default_context(ssl.Purpose.CLIENT_AUTH)
-    ssl_context.load_cert_chain('cert.pem', 'key.pem')
-
-    web.run_app(app, access_log=None, host='0.0.0.0', port=8443, ssl_context=ssl_context)
+    try:
+        logger.info("Creating SSL context...")
+        ssl_context = ssl.create_default_context(ssl.Purpose.CLIENT_AUTH)
+        logger.info("Loading SSL certificate and key...")
+        ssl_context.load_cert_chain('cert.pem', 'key.pem')
+        logger.info("SSL context created successfully")
+        
+        logger.info("Starting server with SSL on port 8443...")
+        web.run_app(app, access_log=None, host='0.0.0.0', port=8443, ssl_context=ssl_context)
+    except FileNotFoundError as e:
+        logger.error(f"SSL certificate files not found: {e}")
+        logger.info("Starting server without SSL on port 8080...")
+        web.run_app(app, access_log=None, host='0.0.0.0', port=8080)
+    except ssl.SSLError as e:
+        logger.error(f"SSL configuration error: {e}")
+        raise
+    except Exception as e:
+        logger.error(f"Unexpected error during server startup: {e}")
+        raise
+    finally:
+        logger.info("Server shutdown")
