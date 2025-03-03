@@ -145,14 +145,14 @@ class DiffusionProcessor:
     def __call__(self, img, prompt):
         start_time = time.time()
         
-        img = cv2.resize(img, (1024, 1024), interpolation=cv2.INTER_LINEAR)
+        img = cv2.resize(img, (512, 512), interpolation=cv2.INTER_LINEAR)
 
         img = np.float32(img) / 255
         filtered_img = self.run(
             images=[img],
-            seed=0,
+            seed=40000,
             prompt=prompt.decode("utf-8"),
-            num_inference_steps=2,
+            num_inference_steps=1,
             strength=0.7
         )[0]
         filtered_img = np.uint8(filtered_img * 255)

@@ -160,7 +160,7 @@ if __name__ == '__main__':
         
         logger.info("Starting server with SSL on port 8443...")
         # web.run_app(app, access_log=True, host='0.0.0.0', port=8443, ssl_context=ssl_context)
-        web.run_app(app, access_log=True, host='0.0.0.0', port=8443)
+        web.run_app(app, access_log=False, host='0.0.0.0', port=8443)
     except FileNotFoundError as e:
         logger.error(f"SSL certificate files not found: {e}")
         raise
