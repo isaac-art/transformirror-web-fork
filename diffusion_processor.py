@@ -152,7 +152,7 @@ class DiffusionProcessor:
             images=[img],
             seed=40000,
             prompt=prompt.decode("utf-8"),
-            num_inference_steps=1,
+            num_inference_steps=2,
             strength=0.7
         )[0]
         filtered_img = np.uint8(filtered_img * 255)
