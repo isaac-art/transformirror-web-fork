@@ -154,13 +154,15 @@ if __name__ == '__main__':
         logger.info("Loading SSL certificate and key...")
         ssl_context.load_cert_chain('cert.pem', 'key.pem')
         logger.info("SSL context created successfully")
+
+        ssl_context.check_hostname = False
+        ssl_context.verify_mode = ssl.CERT_NONE
         
         logger.info("Starting server with SSL on port 8443...")
-        web.run_app(app, access_log=None, host='0.0.0.0', port=8443, ssl_context=ssl_context)
+        web.run_app(app, access_log=True, host='0.0.0.0', port=8443, ssl_context=ssl_context)
     except FileNotFoundError as e:
         logger.error(f"SSL certificate files not found: {e}")
-        logger.info("Starting server without SSL on port 8080...")
-        web.run_app(app, access_log=None, host='0.0.0.0', port=8080)
+        raise
     except ssl.SSLError as e:
         logger.error(f"SSL configuration error: {e}")
         raise
